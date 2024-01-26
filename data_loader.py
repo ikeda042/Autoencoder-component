@@ -8,8 +8,7 @@ import pickle
 import os 
 
 
-def load_database(database_name: str) -> None:
-    output_dir = "output_positive"
+def load_database(output_dir:str, database_name: str) -> None:
     for dir in [output_dir, f'{output_dir}/ph', f'{output_dir}/fluo']:
         try:
             os.mkdir(dir)
@@ -46,11 +45,13 @@ def load_database(database_name: str) -> None:
                 mask = np.zeros((image_size[0],image_size[1]), dtype=np.uint8)
                 cv2.fillPoly(mask, [pickle.loads(cell.contour)], 1)
                 output_image = cv2.bitwise_and(image_fluo1, image_fluo1, mask=mask)
+                #輝度を0-255に正規化
+                output_image = output_image - np.min(output_image)
+                output_image = output_image / np.max(output_image) * 255
+                output_image = output_image.astype(np.uint8)
                 output_image_color = cv2.cvtColor(output_image, cv2.COLOR_GRAY2BGR)
                 output_image_color[:, :, 0] = 0
                 output_image_color[:, :, 2] = 0
                 cv2.imwrite(f"{output_dir}/fluo/{n}.png", output_image_color)
                 
-#Usage
-load_database('sk320gen120min.db')
     
