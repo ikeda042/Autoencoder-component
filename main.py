@@ -114,7 +114,7 @@ def autoencoder(train_mode: bool = True):
     dataset = ImageDataset(folder_path='ctrl/fluo')
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-    num_epochs = 10
+    num_epochs = 15
     for epoch in range(num_epochs):
         for data in dataloader:
             optimizer.zero_grad()
