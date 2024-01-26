@@ -9,7 +9,8 @@ import os
 
 
 def load_database(database_name: str) -> None:
-    for dir in ['output', 'output/ph', 'output/fluo']:
+    output_dir = "output_positive"
+    for dir in [output_dir, f'{output_dir}/ph', f'{output_dir}/fluo']:
         try:
             os.mkdir(dir)
         except:
@@ -37,7 +38,7 @@ def load_database(database_name: str) -> None:
         for cell in cells:
             if cell.manual_label == 1:
                 image_ph = cv2.imdecode(np.frombuffer(cell.img_ph, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
-                cv2.imwrite(f"output/ph/{n}.png", image_ph)
+                cv2.imwrite(f"{output_dir}/ph/{n}.png", image_ph)
                 n += 1
                 image_fluo1 = cv2.imdecode(np.frombuffer(cell.img_fluo1, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
                 cell_contour = [list(i[0]) for i in pickle.loads(cell.contour)]
@@ -48,8 +49,8 @@ def load_database(database_name: str) -> None:
                 output_image_color = cv2.cvtColor(output_image, cv2.COLOR_GRAY2BGR)
                 output_image_color[:, :, 0] = 0
                 output_image_color[:, :, 2] = 0
-                cv2.imwrite(f"output/fluo/{n}.png", output_image_color)
+                cv2.imwrite(f"{output_dir}/fluo/{n}.png", output_image_color)
                 
 #Usage
-load_database('test_database.db')
+load_database('sk320gen120min.db')
     
