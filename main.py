@@ -14,7 +14,6 @@ from torch.utils.data import Dataset, DataLoader
 from data_loader import load_database
 import matplotlib.pyplot as plt
 import os 
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
@@ -135,7 +134,20 @@ def autoencoder(train_mode: bool = True):
             print(f"Image {i} is an outlier")
         print(f"L2 Norm Loss for the image: {l2_norm_loss:.4f}")
         data.append(l2_norm_loss)
-    box_plot_function([np.array(data)], ["-"], "Image", "L2 Norm Loss", "l2_norm_loss")
+    
+    ctrl = []
+    for i in range(1,len(os.listdir('ctrl/fluo'))):
+        image_path = f'ctrl/fluo/{i}.png'
+        l2_norm_loss = evaluate_image(image_path, model)
+        if l2_norm_loss <24:
+            print(f"Image {i} is an outlier")
+        print(f"L2 Norm Loss for the image: {l2_norm_loss:.4f}")
+        data.append(l2_norm_loss)
+        ctrl.append(l2_norm_loss)
+    box_plot_function([np.array(ctrl),np.array(data)], ["Ctrl.","data"], "Image", "L2 Norm Loss", "l2_norm_loss")
+
+    
+
 
 
 if __name__ == '__main__':
